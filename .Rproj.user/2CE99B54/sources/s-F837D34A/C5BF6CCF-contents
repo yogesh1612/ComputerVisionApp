@@ -1,0 +1,49 @@
+install.packages("AzureCognitive")
+install.packages("AzureVision")
+
+library(AzureCognitive)
+library(AzureVision)
+
+# function-1 validate user
+vis <- computervision_endpoint(
+  url="https://mlbm-cognitive-services.cognitiveservices.azure.com/",
+  key="3a2e673c2a1b4f91a7304ceaceaa190f"
+)
+
+img <- readBin("C://Users//31202//Pictures//pp.jpg","raw",file.size("C://Users//31202//Pictures//pp.jpg"))
+  img_url <-  readBin("C://Users//31202//Pictures//grpup.jpg","raw",file.size("C://Users//31202//Pictures//grpup.jpg"))
+
+t <- analyze(vis, img,
+             feature_types = c('Adult','Brands','Categories','Description','Faces','Objects','Tags'),
+             domain = c("celebrities",'landmarks'))
+
+analyze(vis, img, feature_types=c("objects"))
+
+
+# detect faces
+
+df <- analyze(vis,img_url,feature_types = 'Faces')
+
+
+faces = df
+faces_tib = tibble(faceID = numeric(),
+                   age = numeric(), 
+                   gender = character(),
+                   x1 = numeric(),
+                   x2 = numeric(),
+                   y1 = numeric(),
+                   y2 = numeric())
+n = 0
+for(face in faces){
+  n = n + 1
+  tmp = tibble(faceID = n,
+               age = faces$age, 
+               gender = faces$gender,
+               x1 = face$faceRectangle$left,
+               y1 = face$faceRectangle$top,
+               x2 = face$faceRectangle$left + face$faceRectangle$width,
+               y2 = face$faceRectangle$top + face$faceRectangle$height)
+  faces_tib = faces_tib %>% bind_rows(tmp)
+}
+faces_tib
+knitr::kable(faces_tib)

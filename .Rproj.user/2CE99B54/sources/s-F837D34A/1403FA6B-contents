@@ -1,0 +1,57 @@
+install.packages("AzureCognitive")
+install.packages("AzureVision")
+
+library(AzureCognitive)
+library(AzureVision)
+# https://azure.microsoft.com/en-in/free/students/
+
+vis <- computervision_endpoint(
+  url <- "https://isb-mlbm.cognitiveservices.azure.com/",
+  key <- "5ddee90e37b949ad89355e79d40008b5"
+)
+
+# function-1 validate user
+vis <- computervision_endpoint(
+  url="https://mlbm-cognitive-services.cognitiveservices.azure.com/",
+  key="3a2e673c2a1b4f91a7304ceaceaa190f"
+)
+
+# function-2 get and display image
+bill_url <- "https://news.microsoft.com/uploads/2014/09/billg1_print.jpg" #option-1 from URL
+#option-2 from user upload
+# as a raw vector
+img <- readBin("C://Users//31202//Pictures//pp.jpg","raw",file.size("C://Users//31202//Pictures//pp.jpg"))
+
+img1 <- EBImage::readImage("C://Users//31202//Pictures//pp.jpg")#,"raw",file.size("C://Users//31202//Pictures//pp.jpg"))
+
+img2 <- magick::image_read("C://Users//31202//Pictures//pp.jpg")#,"raw",file.size("C://Users//31202//Pictures//pp.jpg"))
+
+image_info(img)
+
+analyze(vis,bill_url)
+
+
+# images can be specified as a filename, Internet URL, or raw vector
+
+t <- analyze(vis, img,feature_types = c("faces","Description"),)
+
+
+
+endp <- cognitive_endpoint("https://mlbm-cognitive-services.cognitiveservices.azure.com",
+                           service_type="Computervision", key="3a2e673c2a1b4f91a7304ceaceaa190f")
+
+# analyze an image
+img_link <- "https://news.microsoft.com/uploads/2014/09/billg1_print.jpg"
+
+
+temp <- call_cognitive_endpoint(endp,
+                        operation="analyze",
+                        body=list(url=img_link),
+                        options=list(details="celebrities"),
+                        http_verb="POST",
+                        simplifyDataFrame=TRUE)
+
+curl -H "Ocp-Apim-Subscription-Key: 3a2e673c2a1b4f91a7304ceaceaa190f" 
+-o abc.jpg -H "Content-Type: application/json" 
+"https://mlbm-cognitive-services.cognitiveservices.azure.com/vision/v3.2/generateThumbnail?width=100&height=100&smartCropping=true" 
+-d "{\"url\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Shorkie_Poo_Puppy.jpg/1280px-Shorkie_Poo_Puppy.jpg\"}

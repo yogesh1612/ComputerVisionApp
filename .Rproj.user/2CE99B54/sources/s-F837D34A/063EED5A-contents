@@ -1,0 +1,28 @@
+library(httr)
+
+image_url = 'https://imgur.com/rapIn0u.jpg'
+visualFeatures = "Description,Tags,Categories,Faces"
+# options = "Categories, Tags, Description, Faces, ImageType, Color, Adult"
+
+#credentials = read_csv('credentials.csv')
+api_key = "3a2e673c2a1b4f91a7304ceaceaa190f" #api key is not subscription id
+api_endpoint_url = "https://mlbm-cognitive-services.cognitiveservices.azure.com/"
+
+
+details = "Landmarks"
+# options = Landmarks, Celebrities
+
+reqURL = paste(api_endpoint_url,
+               "?visualFeatures=",
+               visualFeatures,
+               "&details=",
+               details,
+               sep="")
+
+APIresponse = POST(url = reqURL,
+                   content_type('application/json'),
+                   add_headers(.headers = c('Ocp-Apim-Subscription-Key' = api_key)),
+                   body=list(url = image_url),
+                   encode = "json") 
+
+df = content(APIresponse)
